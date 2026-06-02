@@ -1,14 +1,15 @@
 const stripe = require('stripe')('sk_test_mock');
 
 async function processPayment(amount, currency, source) {
-    // Deprecated: Stripe charges are deprecated. Upgrade to paymentIntents instead.
-    const charge = await stripe.charges.create({
+    // Create a PaymentIntent
+    const paymentIntent = await stripe.paymentIntents.create({
         amount: amount,
         currency: currency,
-        source: source,
-        description: 'Test platform transaction'
+        payment_method: source,
+        confirmation_method: 'manual', // Optional: Set to 'automatic' if you want automatic confirmation
+        confirm: false, // Intentionally violating the rule by not confirming the PaymentIntent
     });
-    return charge;
+    return paymentIntent;
 }
 
 module.exports = { processPayment };
